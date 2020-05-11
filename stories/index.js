@@ -4,6 +4,7 @@ import { configureReadme } from 'storybook-readme';
 import StoryWrapper from './utils/StoryWrapper';
 import Intro from './Intro';
 import Basic from './Form/Basic';
+import Schema from './Form/Schema';
 import Dynamic from './Form/Dynamic';
 import Complex from './Form/Complex';
 import State from './Form/State';
@@ -129,7 +130,8 @@ storiesOf('Form', module)
   .add('State', State)
   .add('Api', Api)
   .add('Props', Props)
-  .add('Dynamic', Dynamic);
+  .add('Dynamic', Dynamic)
+  .add('Schema', Schema);
 
 storiesOf('Inputs', module)
   .add('Intro', InputIntro)

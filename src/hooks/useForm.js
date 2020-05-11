@@ -3,6 +3,8 @@ import Debug from '../debug';
 import FormController from '../FormController';
 import FormProvider from '../components/FormProvider';
 import useLayoutEffect from './useIsomorphicLayoutEffect';
+import { computeFieldsFromSchema } from '../utils';
+import fieldMap from '../fieldMap';
 
 const logger = Debug('informed:useForm' + '\t\t');
 
@@ -20,6 +22,7 @@ const useForm = ({
   onValueChange,
   onSubmitFailure,
   validationSchema,
+  schema,
   ...userProps
 }) => {
 
@@ -87,6 +90,9 @@ const useForm = ({
   // We dont want this to happen on every render so thats why useState is used here
   const [formApi] = useState(() => formController.getFormApi());
 
+  // Get fields from scheama
+  const schemaFields = computeFieldsFromSchema(schema);
+
   // TODO technically speaking this can be unsafe as there is circular dependency 
   // between form provider and useForm.. Its ok because anyone that in theory 
   // Uses a form provider and a use form hook themselves will never call the render 
@@ -95,6 +101,12 @@ const useForm = ({
   const render = (children) => (
     <FormProvider formApi={formApi} formState={formState} formController={formController}>
       {children}
+      {schemaFields.map((field, i) => {
+        const componentType = field.componentType;
+        const props = field.props;
+        const Component = fieldMap[componentType];
+        return <Component key={`ScheamField-${i}`} field={field.field} {...props} />;
+      })}
     </FormProvider>
   );
 

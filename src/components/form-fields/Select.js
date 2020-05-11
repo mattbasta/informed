@@ -17,20 +17,18 @@ const Select = ({ fieldApi, fieldState, ...props }) => {
     forwardedRef,
     debug,
     multiple,
+    options,
     ...rest
   } = props;
 
   const selectRef = useRef();
 
-  const handleChange = (e) => {
-
+  const handleChange = e => {
     let selected = Array.from((forwardedRef || selectRef).current)
       .filter(option => option.selected)
       .map(option => option.value);
 
-    fieldApi.setValue(
-      multiple ? selected : selected[0] || ''
-    );
+    fieldApi.setValue(multiple ? selected : selected[0] || '');
 
     if (onChange && e) {
       onChange(e);
@@ -38,16 +36,14 @@ const Select = ({ fieldApi, fieldState, ...props }) => {
   };
 
   // for debugging
-  useLayoutEffect(
-    () => {
-      if (debug && forwardedRef) {
-        forwardedRef.current.style.background = 'red';
-        setTimeout(() => {
-          forwardedRef.current.style.background = 'white';
-        }, 500);
-      }
+  useLayoutEffect(() => {
+    if (debug && forwardedRef) {
+      forwardedRef.current.style.background = 'red';
+      setTimeout(() => {
+        forwardedRef.current.style.background = 'white';
+      }, 500);
     }
-  );
+  });
 
   logger('Render', field, value);
 
@@ -65,10 +61,18 @@ const Select = ({ fieldApi, fieldState, ...props }) => {
           onBlur(e);
         }
       }}>
-      {children}
+      {options
+        ? options.map(option => (
+          <option
+            key={option.value}
+            value={option.value}
+            disabled={option.disabled}>
+            {option.label}
+          </option>
+        ))
+        : children}
     </select>
   );
-
 };
 
 export { Select as BasicSelect };
